@@ -1,0 +1,48 @@
+name: Build Android APK
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      # keep the same signing key between builds so updates install over the old app
+      - uses: actions/cache@v4
+        with:
+          path: ~/.android/debug.keystore
+          key: givusfree-debug-keystore
+      - run: npm install --no-audit --no-fund
+      - run: npx cap add android
+      - name: App icon and camera permission
+        run: |
+          for d in mdpi hdpi xhdpi xxhdpi xxxhdpi; do
+            cp android-icons/$d.png android/app/src/main/res/mipmap-$d/ic_launcher.png
+            cp android-icons/$d.png android/app/src/main/res/mipmap-$d/ic_launcher_round.png
+            cp android-icons/$d.png android/app/src/main/res/mipmap-$d/ic_launcher_foreground.png
+          done
+          rm -rf android/app/src/main/res/mipmap-anydpi-v26
+          sed -i 's#<uses-permission android:name="android.permission.INTERNET" />#<uses-permission android:name="android.permission.INTERNET" />\n    <uses-permission android:name="android.permission.CAMERA" />#' android/app/src/main/AndroidManifest.xml
+          grep -q CAMERA android/app/src/main/AndroidManifest.xml
+      - run: npx cap sync android
+      - name: Build
+        working-directory: android
+        run: ./gradlew assembleDebug --no-daemon
+      - run: cp android/app/build/outputs/apk/debug/app-debug.apk GivUsFree.apk
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete android --yes --cleanup-tag || true
+          gh release create android GivUsFree.apk --title "GivUsFree for Android" --latest \
+            --notes "Download **GivUsFree.apk** below, open it on your Android phone and allow installing from this source. Built from ${GITHUB_SHA::7}."

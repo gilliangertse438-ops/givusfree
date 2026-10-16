@@ -1,0 +1,7 @@
+{
+  "appId": "app.givusfree.tracker",
+  "appName": "GivUsFree",
+  "webDir": "app",
+  "backgroundColor": "#07080d",
+  "android": { "backgroundColor": "#07080d" }
+}

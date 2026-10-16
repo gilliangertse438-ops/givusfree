@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Get GivUsFree</title>
+  <meta name="description" content="Download GivUsFree for Android or add it to your iPhone.">
+  <meta name="theme-color" content="#07080d">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    #app { padding-bottom: 40px; }
+    .logo { width: 72px; height: 72px; border-radius: 22px; margin: 18px 0 26px; animation: rise .6s var(--ease) both; }
+    .step { display: flex; gap: 12px; padding: 10px 0; color: var(--ink-2); font-size: 15px; }
+    .step b.n { flex: none; width: 26px; height: 26px; border-radius: 9px; display: grid; place-items: center; background: var(--card-2); color: var(--ink); font-size: 13px; }
+    .plat { font-family: var(--display); font-weight: 700; font-size: 22px; letter-spacing: -.02em; margin: 0 0 6px; }
+    .here { outline: 2px solid var(--blue); outline-offset: 3px; }
+  </style>
+</head>
+<body>
+  <main id="app" class="stagger">
+    <img class="logo" src="icons/icon-192.png" alt="GivUsFree">
+    <h1 class="splash" style="min-height:0;padding:0"><span class="word" style="font-size:clamp(46px,14vw,72px);margin:0 0 12px"><span>Get</span><span>GivUsFree<u>.</u></span></span></h1>
+    <p class="sub" style="font-size:17px;margin:0 0 24px">Snap your food, know your calories. Free for the whole family — no sign-ups, no payments, no ads.</p>
+
+    <section class="card" id="android">
+      <div class="plat">Android</div>
+      <a class="btn green" id="apk" href="#" style="text-decoration:none">Download the app (APK)</a>
+      <div class="step"><b class="n">1</b><span>Open the downloaded <b>GivUsFree.apk</b>.</span></div>
+      <div class="step"><b class="n">2</b><span>If asked, allow your browser to <b>install unknown apps</b>, then tap Install.</span></div>
+      <div class="step" style="padding-bottom:0"><b class="n">·</b><span>Prefer no download? Open the web app in Chrome, tap ⋮ → <b>Add to Home screen</b>.</span></div>
+    </section>
+
+    <section class="card" id="ios">
+      <div class="plat">iPhone & iPad</div>
+      <a class="btn blue" href="./" style="text-decoration:none">Open GivUsFree in Safari</a>
+      <div class="step"><b class="n">1</b><span>Open the link above in <b>Safari</b>.</span></div>
+      <div class="step"><b class="n">2</b><span>Tap the <b>Share</b> button (square with an arrow).</span></div>
+      <div class="step" style="padding-bottom:0"><b class="n">3</b><span>Choose <b>Add to Home Screen</b>. It opens full-screen like any app.</span></div>
+    </section>
+
+    <p class="tiny" style="text-align:center;margin-top:24px">Everything is stored on your own phone. Nothing to sign up for.</p>
+  </main>
+  <script>
+    // Works out the GitHub repo from the Pages address: <owner>.github.io/<repo>/
+    const owner = location.hostname.split('.')[0];
+    const repo = location.pathname.split('/').filter(Boolean)[0] || 'givusfree';
+    document.getElementById('apk').href = `https://github.com/${owner}/${repo}/releases/latest/download/GivUsFree.apk`;
+    const ua = navigator.userAgent;
+    const el = /android/i.test(ua) ? 'android' : /iphone|ipad|ipod|macintosh/i.test(ua) && 'ontouchend' in document ? 'ios' : null;
+    if (el) { const s = document.getElementById(el); s.classList.add('here'); s.parentNode.insertBefore(s, s.parentNode.querySelector('.card')); }
+  </script>
+</body>
+</html>
